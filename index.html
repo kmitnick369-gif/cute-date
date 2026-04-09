@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Very Important Question 🥺</title>
+  <style>
+    /* ===== GLOBAL RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky: #d6eeff;
+      --pink: #ffd6e8;
+      --lavender: #e8d6ff;
+      --mint: #d6ffee;
+      --white: #fffaf9;
+      --soft-gray: #f5f0f0;
+      --judy-purple: #8b6bbf;
+      --nick-orange: #e8793a;
+      --text-dark: #3a2a4a;
+      --text-mid: #6a4a7a;
+      --heart-red: #ff6b8a;
+      --yes-color: #ff6b8a;
+      --yes-dark: #e0446e;
+      --no-color: #b0b8c8;
+      --no-dark: #8898aa;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(160deg, var(--sky) 0%, var(--pink) 50%, var(--lavender) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* ===== FLOATING HEARTS BACKGROUND ===== */
+    #hearts-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-float {
+      position: absolute;
+      bottom: -60px;
+      font-size: 24px;
+      animation: floatUp linear infinite;
+      opacity: 0;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0%   { opacity: 0;   transform: translateY(0) scale(0.5) rotate(-10deg); }
+      10%  { opacity: 0.7; }
+      80%  { opacity: 0.4; }
+      100% { opacity: 0;   transform: translateY(-110vh) scale(1.2) rotate(20deg); }
+    }
+
+    /* ===== MAIN CARD ===== */
+    #main-card {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 250, 249, 0.92);
+      border-radius: 32px;
+      padding: 36px 28px 40px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(139, 107, 191, 0.18), 0 2px 12px rgba(255, 107, 138, 0.10);
+      text-align: center;
+      animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      border: 2px solid rgba(255, 180, 210, 0.4);
+    }
+
+    @keyframes cardEntrance {
+      from { opacity: 0; transform: scale(0.7) translateY(40px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ===== CHARACTERS ===== */
+    #characters {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .char-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .char-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--judy-purple);
+      background: var(--lavender);
+      animation: charBounce 2.4s ease-in-out infinite;
+      box-shadow: 0 4px 14px rgba(139, 107, 191, 0.25);
+    }
+
+    .char-img.nick { border-color: var(--nick-orange); animation-delay: 0.4s; }
+
+    @keyframes charBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .char-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--judy-purple);
+      letter-spacing: 0.5px;
+    }
+
+    .char-label.nick-label { color: var(--nick-orange); }
+
+    /* Fallback SVG characters in case images don't load */
+    .char-svg {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid var(--judy-purple);
+      background: var(--lavender);
+      box-shadow: 0 4px 14px rgba(139, 107, 191, 0.25);
+      animation: charBounce 2.4s ease-in-out infinite;
+      overflow: hidden;
+    }
+
+    .char-svg.nick { border-color: var(--nick-orange); animation-delay: 0.4s; }
+
+    /* ===== MESSAGE ===== */
+    #message {
+      font-size: clamp(18px, 5vw, 22px);
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+
+    #message span.highlight {
+      color: var(--judy-purple);
+    }
+
+    /* ===== BUTTONS ===== */
+    #buttons {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      min-height: 70px;
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: transform 0.18s, box-shadow 0.18s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* YES Button */
+    #btn-yes {
+      background: linear-gradient(135deg, var(--yes-color), #ff9ab5);
+      color: white;
+      font-size: 18px;
+      padding: 16px 34px;
+      box-shadow: 0 4px 18px rgba(255, 107, 138, 0.4);
+      animation: yesWiggle 1.8s ease-in-out infinite;
+    }
+
+    #btn-yes:active { transform: scale(0.96) !important; }
+
+    @keyframes yesWiggle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25%       { transform: scale(1.04) rotate(-2deg); }
+      75%       { transform: scale(1.04) rotate(2deg); }
+    }
+
+    /* NO Button */
+    #btn-no {
+      background: var(--no-color);
+      color: #fff;
+      font-size: 16px;
+      padding: 14px 26px;
+      box-shadow: 0 2px 10px rgba(176, 184, 200, 0.3);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.3s ease, top 0.3s ease, box-shadow 0.18s;
+    }
+
+    #btn-no.dodge-mode {
+      position: fixed;
+      z-index: 999;
+    }
+
+    /* ===== CELEBRATION SCREEN ===== */
+    #celebration {
+      display: none;
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 250, 249, 0.95);
+      border-radius: 32px;
+      padding: 36px 28px 40px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(139, 107, 191, 0.25);
+      text-align: center;
+      animation: cardEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      border: 2px solid rgba(255, 180, 210, 0.5);
+    }
+
+    #celebration h2 {
+      font-size: clamp(22px, 6vw, 28px);
+      color: var(--judy-purple);
+      margin-bottom: 14px;
+      animation: celebPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+    }
+
+    @keyframes celebPop {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .speech-bubble {
+      background: linear-gradient(135deg, var(--lavender), var(--pink));
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin: 12px 0;
+      font-size: 15px;
+      color: var(--text-dark);
+      line-height: 1.6;
+      position: relative;
+      animation: bubbleIn 0.5s ease both;
+    }
+
+    .speech-bubble.nick-bubble {
+      background: linear-gradient(135deg, #ffe4cc, #ffd6b0);
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .speech-bubble b { color: var(--judy-purple); }
+    .speech-bubble.nick-bubble b { color: var(--nick-orange); }
+
+    #celeb-footer {
+      margin-top: 18px;
+      font-size: 28px;
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      0%   { transform: rotate(0deg) scale(1); }
+      50%  { transform: rotate(180deg) scale(1.15); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti-piece {
+      position: fixed;
+      top: -20px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      85%  { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ===== SMALL SCREENS ===== */
+    @media (max-width: 360px) {
+      #main-card, #celebration { padding: 28px 16px 32px; border-radius: 24px; }
+      .char-img, .char-svg { width: 72px; height: 72px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating hearts -->
+  <div id="hearts-bg"></div>
+
+  <!-- MAIN ASK SCREEN -->
+  <div id="main-card">
+
+    <!-- Characters -->
+    <div id="characters">
+      <!-- Judy Hopps (inline SVG fallback if image blocked) -->
+      <div class="char-wrap">
+        <svg class="char-svg" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <ellipse cx="45" cy="70" rx="20" ry="18" fill="#9b8ac4"/>
+          <!-- Head -->
+          <circle cx="45" cy="42" r="22" fill="#c8b8e8"/>
+          <!-- Ears -->
+          <ellipse cx="33" cy="16" rx="6" ry="16" fill="#c8b8e8"/>
+          <ellipse cx="57" cy="16" rx="6" ry="16" fill="#c8b8e8"/>
+          <ellipse cx="33" cy="16" rx="3" ry="12" fill="#f5b8d0"/>
+          <ellipse cx="57" cy="16" rx="3" ry="12" fill="#f5b8d0"/>
+          <!-- Face -->
+          <circle cx="39" cy="40" r="3.5" fill="#5a3a8a"/>
+          <circle cx="51" cy="40" r="3.5" fill="#5a3a8a"/>
+          <ellipse cx="39" cy="39" rx="1.2" ry="1.4" fill="white" opacity="0.7"/>
+          <ellipse cx="51" cy="39" rx="1.2" ry="1.4" fill="white" opacity="0.7"/>
+          <!-- Nose -->
+          <ellipse cx="45" cy="47" rx="3" ry="2" fill="#e88cb0"/>
+          <!-- Mouth / smile -->
+          <path d="M41 51 Q45 55 49 51" stroke="#8a4a6a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Cheek blush -->
+          <ellipse cx="35" cy="47" rx="4" ry="2.5" fill="#ffaacc" opacity="0.5"/>
+          <ellipse cx="55" cy="47" rx="4" ry="2.5" fill="#ffaacc" opacity="0.5"/>
+          <!-- Badge -->
+          <circle cx="45" cy="67" r="5" fill="#4a8ad4"/>
+          <text x="45" y="70" text-anchor="middle" font-size="6" fill="white" font-weight="bold">ZPD</text>
+        </svg>
+        <span class="char-label">Judy 🐰</span>
+      </div>
+
+      <!-- Heart between them -->
+      <div style="font-size: 32px; margin-bottom: 24px; animation: charBounce 1.8s ease-in-out infinite; animation-delay: 0.2s;">💜</div>
+
+      <!-- Nick Wilde (inline SVG) -->
+      <div class="char-wrap">
+        <svg class="char-svg nick" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <ellipse cx="45" cy="70" rx="20" ry="18" fill="#c4662a"/>
+          <!-- Tie/shirt detail -->
+          <ellipse cx="45" cy="72" rx="7" ry="8" fill="#3a7a3a"/>
+          <!-- Head -->
+          <circle cx="45" cy="42" r="22" fill="#e8884a"/>
+          <!-- Snout -->
+          <ellipse cx="45" cy="50" rx="9" ry="6" fill="#f5a870"/>
+          <!-- Ears -->
+          <polygon points="28,20 24,3 38,14" fill="#e8884a"/>
+          <polygon points="62,20 66,3 52,14" fill="#e8884a"/>
+          <polygon points="30,18 27,7 37,14" fill="#d46038"/>
+          <polygon points="60,18 63,7 53,14" fill="#d46038"/>
+          <!-- Forehead stripe -->
+          <ellipse cx="45" cy="28" rx="7" ry="5" fill="#f5a870"/>
+          <!-- Eyes - half-lidded smug look -->
+          <ellipse cx="39" cy="40" rx="4" ry="3" fill="white"/>
+          <ellipse cx="51" cy="40" rx="4" ry="3" fill="white"/>
+          <ellipse cx="39" cy="41" rx="2.5" ry="2.5" fill="#4a7a30"/>
+          <ellipse cx="51" cy="41" rx="2.5" ry="2.5" fill="#4a7a30"/>
+          <ellipse cx="39" cy="40.5" rx="1.2" ry="1.2" fill="#1a3a10"/>
+          <ellipse cx="51" cy="40.5" rx="1.2" ry="1.2" fill="#1a3a10"/>
+          <!-- Eyelids (half-lidded) -->
+          <rect x="35" y="38" width="8" height="3" rx="1" fill="#e8884a"/>
+          <rect x="47" y="38" width="8" height="3" rx="1" fill="#e8884a"/>
+          <!-- Nose -->
+          <ellipse cx="45" cy="47" rx="3" ry="2" fill="#3a2a1a"/>
+          <!-- Smirk -->
+          <path d="M40 52 Q47 57 52 52" stroke="#a04020" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- White snout markings -->
+          <ellipse cx="41" cy="51" rx="3" ry="2" fill="white" opacity="0.6"/>
+          <ellipse cx="49" cy="51" rx="3" ry="2" fill="white" opacity="0.6"/>
+        </svg>
+        <span class="char-label nick-label">Nick 🦊</span>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <p id="message">
+      Hey <span class="highlight">you</span>, I was wondering...<br/>
+      would you go on a date with me? 🥺
+    </p>
+
+    <!-- Buttons -->
+    <div id="buttons">
+      <button id="btn-yes" class="btn" onclick="handleYes()">YES 💖</button>
+      <button id="btn-no"  class="btn" onclick="handleNo()">NO 🙈</button>
+    </div>
+
+    <!-- Sub-hint text -->
+    <p id="hint" style="margin-top: 16px; font-size: 13px; color: #b09ab8; min-height: 20px;"></p>
+  </div>
+
+  <!-- CELEBRATION SCREEN -->
+  <div id="celebration">
+    <div style="font-size: 48px; margin-bottom: 8px; animation: celebPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;">🎉</div>
+    <h2>She said YES! 🎊</h2>
+
+    <div class="speech-bubble nick-bubble" style="animation-delay: 0.3s;">
+      <b>Nick:</b> Okay, okay — don't make it weird, Carrots... but will you go on a date with me? 🦊🧡<br/>
+      <em style="font-size:13px;color:#c06030;">*adjusts tie nervously*</em>
+    </div>
+
+    <div class="speech-bubble" style="animation-delay: 0.55s;">
+      <b>Judy:</b> Nick Wilde, did you just get flustered? 🐰💜<br/>
+      <em style="font-size:13px;color:#8a6aaa;">...YES. Obviously yes. Don't push it.</em>
+    </div>
+
+    <div class="speech-bubble nick-bubble" style="animation-delay: 0.8s;">
+      <b>Nick:</b> I knew you couldn't resist a charming fox 😏✨<br/>
+      <em style="font-size:13px;color:#c06030;">*already smirking again*</em>
+    </div>
+
+    <p style="margin-top: 16px; font-size: 16px; color: var(--text-dark); font-weight: 600;">
+      Have the most amazing date ever! 🦊🐰💕
+    </p>
+
+    <div id="celeb-footer">🌟💕🌟</div>
+  </div>
+
+  <script>
+    /* ===================================================
+       FLOATING HEARTS BACKGROUND
+    =================================================== */
+    const heartsBg = document.getElementById('hearts-bg');
+    const heartEmojis = ['💜', '💖', '🩷', '🤍', '💙', '🩵', '💞', '💝'];
+
+    function spawnHeart() {
+      const h = document.createElement('div');
+      h.className = 'heart-float';
+      h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (16 + Math.random() * 20) + 'px';
+      const dur = 6 + Math.random() * 8;
+      h.style.animationDuration = dur + 's';
+      h.style.animationDelay = (Math.random() * 4) + 's';
+      heartsBg.appendChild(h);
+      setTimeout(() => h.remove(), (dur + 4) * 1000);
+    }
+
+    // Spawn hearts continuously
+    setInterval(spawnHeart, 600);
+    for (let i = 0; i < 8; i++) spawnHeart(); // initial burst
+
+    /* ===================================================
+       NO BUTTON LOGIC
+    =================================================== */
+    let noCount = 0;
+    const btnYes = document.getElementById('btn-yes');
+    const btnNo  = document.getElementById('btn-no');
+    const hint   = document.getElementById('hint');
+
+    // YES scale sizes per NO click count
+    const yesSizes = ['22px', '28px', '34px', '42px'];
+    const yesPads  = ['16px 34px', '20px 44px', '26px 56px', '32px 70px'];
+    const hintTexts = [
+      'Are you sure? 🥺',
+      'But… but look at their faces! 🐰🦊',
+      'Last chance before the fox gets sneaky! 🦊',
+      'Quick! Catch the button if you can! 😂'
+    ];
+
+    function handleNo() {
+      noCount++;
+      // Update YES button size
+      const idx = Math.min(noCount, yesSizes.length - 1);
+      btnYes.style.fontSize   = yesSizes[idx];
+      btnYes.style.padding    = yesPads[idx];
+      btnYes.style.boxShadow  = `0 6px ${14 + idx * 8}px rgba(255,107,138,${0.4 + idx * 0.1})`;
+
+      hint.textContent = hintTexts[Math.min(noCount - 1, hintTexts.length - 1)];
+
+      if (noCount === 1) {
+        /* First NO: jump a little */
+        teleportNo(80);
+      } else if (noCount === 2) {
+        /* Second NO: jump further */
+        teleportNo(140);
+      } else if (noCount === 3) {
+        /* Third NO: enter dodge mode */
+        btnNo.textContent = 'NO! 🏃';
+        enterDodgeMode();
+      }
+      /* After 3rd click dodge mode handles everything */
+    }
+
+    /* Teleport NO button to random nearby position */
+    function teleportNo(range) {
+      const rect = btnNo.getBoundingClientRect();
+      const newX = clamp(rect.left + (Math.random() - 0.5) * range * 2, 10, window.innerWidth  - 90);
+      const newY = clamp(rect.top  + (Math.random() - 0.5) * range,     10, window.innerHeight - 60);
+      btnNo.style.position = 'fixed';
+      btnNo.style.left = newX + 'px';
+      btnNo.style.top  = newY + 'px';
+      btnNo.style.zIndex = 999;
+      btnNo.classList.remove('dodge-mode');
+    }
+
+    /* Dodge mode: NO button runs from mouse/touch */
+    let dodgeInterval = null;
+
+    function enterDodgeMode() {
+      btnNo.classList.add('dodge-mode');
+      btnNo.style.transition = 'left 0.4s cubic-bezier(0.34,1.56,0.64,1), top 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+
+      // Place initially in a corner
+      btnNo.style.left = (window.innerWidth - 120) + 'px';
+      btnNo.style.top  = (window.innerHeight - 80) + 'px';
+
+      let cursorX = -999, cursorY = -999;
+
+      // Track mouse
+      document.addEventListener('mousemove', e => { cursorX = e.clientX; cursorY = e.clientY; });
+      // Track touch
+      document.addEventListener('touchmove', e => {
+        cursorX = e.touches[0].clientX;
+        cursorY = e.touches[0].clientY;
+      }, { passive: true });
+
+      dodgeInterval = setInterval(() => {
+        const rect = btnNo.getBoundingClientRect();
+        const btnCX = rect.left + rect.width / 2;
+        const btnCY = rect.top  + rect.height / 2;
+
+        const dx = btnCX - cursorX;
+        const dy = btnCY - cursorY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const threshold = 120;
+
+        if (dist < threshold) {
+          // Run away from cursor
+          const angle = Math.atan2(dy, dx);
+          const flee  = (threshold - dist) * 1.6 + 60;
+          let nx = btnCX + Math.cos(angle) * flee - rect.width  / 2;
+          let ny = btnCY + Math.sin(angle) * flee - rect.height / 2;
+
+          // Clamp within viewport
+          nx = clamp(nx, 10, window.innerWidth  - rect.width  - 10);
+          ny = clamp(ny, 10, window.innerHeight - rect.height - 10);
+
+          btnNo.style.left = nx + 'px';
+          btnNo.style.top  = ny + 'px';
+        } else if (Math.random() < 0.04) {
+          // Occasionally wander
+          const nx = clamp(Math.random() * (window.innerWidth  - 100), 10, window.innerWidth  - 100);
+          const ny = clamp(Math.random() * (window.innerHeight - 60),  10, window.innerHeight - 60);
+          btnNo.style.left = nx + 'px';
+          btnNo.style.top  = ny + 'px';
+        }
+      }, 60);
+    }
+
+    /* ===================================================
+       YES BUTTON
+    =================================================== */
+    function handleYes() {
+      // Stop dodge interval if running
+      if (dodgeInterval) { clearInterval(dodgeInterval); dodgeInterval = null; }
+
+      // Hide main card, show celebration
+      document.getElementById('main-card').style.display = 'none';
+      btnNo.style.display = 'none';
+      const celeb = document.getElementById('celebration');
+      celeb.style.display = 'block';
+
+      // Launch confetti
+      launchConfetti();
+    }
+
+    /* ===================================================
+       CONFETTI
+    =================================================== */
+    const confettiColors = ['#ff6b8a','#ffb347','#b8f5a0','#a0d8ff','#e8aaff','#ffd6a0','#ff9ab5'];
+
+    function launchConfetti() {
+      for (let i = 0; i < 90; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.className = 'confetti-piece';
+          c.style.left     = Math.random() * 100 + 'vw';
+          c.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          c.style.width    = (7 + Math.random() * 10) + 'px';
+          c.style.height   = (7 + Math.random() * 10) + 'px';
+          c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          const dur = 2.5 + Math.random() * 3;
+          c.style.animationDuration = dur + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), dur * 1000 + 200);
+        }, i * 35);
+      }
+      // Second wave
+      setTimeout(launchConfetti2, 2200);
+    }
+
+    function launchConfetti2() {
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.className = 'confetti-piece';
+          c.style.left     = Math.random() * 100 + 'vw';
+          c.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          c.style.width    = (6 + Math.random() * 8) + 'px';
+          c.style.height   = (6 + Math.random() * 8) + 'px';
+          c.style.borderRadius = Math.random() > 0.4 ? '50%' : '2px';
+          const dur = 2 + Math.random() * 2.5;
+          c.style.animationDuration = dur + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), dur * 1000 + 200);
+        }, i * 40);
+      }
+    }
+
+    /* ===================================================
+       UTILITY
+    =================================================== */
+    function clamp(val, min, max) { return Math.min(Math.max(val, min), max); }
+  </script>
+</body>
+</html>
